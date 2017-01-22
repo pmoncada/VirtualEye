@@ -1,9 +1,17 @@
 import numpy as np
 import cv2
 
+# ----------------- Eye detector ----------------- #
+
+def get_point_correspondence_from_image(img0, img1):
+    eye_array_0 = eye_detector(img0)
+    eye_array_1 = eye_detector(img1)
+    return point_corresponder(eye_array_0, eye_array_1)
+
 # Using a pretrained model, this function computes the location of a face and the eyes on the face,
 # in order to generate 8 point correspondences between images
 def eye_detector(img):
+
     face_cascade = cv2.CascadeClassifier('haarcascade_face.xml')
     eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -22,6 +30,7 @@ def eye_detector(img):
 # Given the left bottom corner point, width and height of a rectangle
 # Returns the four corner points
 def point_reconstruct(point):
+
     x,y,w,h = point[0],point[1],point[2],point[3]
     point0 = [x, y]
     point1 = [x + w, y]
@@ -30,14 +39,10 @@ def point_reconstruct(point):
     return [point0, point1, point2, point3]
 
 # Returns two arrays of point correspondences between the two images
-def point_corresponder(eye_array_1, eye_array_2):
+def point_corresponder(eye_array_0, eye_array_1):
+
+    sorted(eye_array_0,key = lambda entry:entry[0])
     sorted(eye_array_1,key = lambda entry:entry[0])
-    sorted(eye_array_2,key = lambda entry:entry[0])
-
-    first_img = point_reconstruct(eye_array_1[0]) + point_reconstruct(eye_array_1[1])
-    second_img = point_reconstruct(eye_array_2[0]) + point_reconstruct(eye_array_2[1])
+    first_img = point_reconstruct(eye_array_0[0]) + point_reconstruct(eye_array_0[1])
+    second_img = point_reconstruct(eye_array_1[0]) + point_reconstruct(eye_array_1[1])
     return first_img, second_img
-
-
-
-    
