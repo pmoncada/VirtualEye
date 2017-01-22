@@ -4,7 +4,7 @@ import cv2
 # Using a pretrained model, this function computes the location of a face and the eyes on the face,
 # in order to generate 8 point correspondences between images
 def eye_detector(img):
-    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    face_cascade = cv2.CascadeClassifier('haarcascade_face.xml')
     eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
